@@ -42,11 +42,12 @@ npm install --save express body-parser pug sparkpost
 
 ## Create
 
-1. Create an `index.js` file with the following contents:
+1. Create an `server.js` file with the following contents:
 
 ```js
 'use strict';
 
+const http = require('http');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -55,6 +56,7 @@ const SparkPost = require('sparkpost');
 const spClient = new SparkPost(process.env.SPARKPOST_API_KEY);
 
 const app = express();
+const srv = http.Server(app);
 
 // Setup view engine
 app.set('views', path.join(__dirname, 'views'));
@@ -85,7 +87,9 @@ app.post('/hello', (req, res, next) => {
   });
 });
 
-app.listen(process.env.PORT || 8080);
+srv.listen(process.env.PORT || 8080, () => {
+  console.log(`Listening on ${srv.address().port}`);
+});
 
 ```
 
